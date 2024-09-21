@@ -1,7 +1,7 @@
 move_speed = 2;
 rotation_speed = 3;
 collision_buffer = 5; 
-init_map()
+init_map(choose("labyrinth","open","default"))
 z = 0;
 z_speed = 0;
 z_acceleration = 0.005;

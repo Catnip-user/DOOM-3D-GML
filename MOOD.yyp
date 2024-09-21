@@ -44,6 +44,8 @@
     {"id":{"name":"doom_3d_effect","path":"scripts/doom_3d_effect/doom_3d_effect.yy",},},
     {"id":{"name":"draw_debug_info","path":"scripts/draw_debug_info/draw_debug_info.yy",},},
     {"id":{"name":"mapa","path":"scripts/mapa/mapa.yy",},},
+    {"id":{"name":"blur","path":"shaders/blur/blur.yy",},},
+    {"id":{"name":"dof","path":"shaders/dof/dof.yy",},},
     {"id":{"name":"snd_footstep","path":"sounds/snd_footstep/snd_footstep.yy",},},
     {"id":{"name":"playergrid","path":"sprites/playergrid/playergrid.yy",},},
     {"id":{"name":"ray","path":"sprites/ray/ray.yy",},},
