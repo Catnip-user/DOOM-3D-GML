@@ -1,4 +1,4 @@
-function doom_3d_effect(player_x, player_y, player_angle, map_data, wall_textures, type="fps") {
+function doom_3d_effect(player_x, player_y, player_z, player_angle, map_data, wall_textures, type="fps") {
     var FOV = pi * 0.6;
     var HALF_FOV = FOV * 0.5;
     var NUM_RAYS = 480; 
@@ -91,12 +91,23 @@ function doom_3d_effect(player_x, player_y, player_angle, map_data, wall_texture
             wall_height = (room_height / correct_distance) * SCALE_FACTOR;
             wall_height = min(wall_height, room_height);
             
-            color_intensity = clamp(255 - (correct_distance * 0.5), 50, 255);
+            color_intensity = clamp(200 - (correct_distance * 1.5), 10, 200);
+
+            var light_sources = global.light_sources;
+            var num_lights = array_length(light_sources);
+            for (var j = 0; j < num_lights; j++) {
+                var light = light_sources[j];
+                var light_distance = point_distance(test_x, test_y, light[0], light[1]);
+                var light_intensity = light[2] / (1 + light_distance * 0.01);
+                color_intensity = min(color_intensity + light_intensity, 255);
+            }
+            
             color = make_color_rgb(color_intensity, color_intensity, color_intensity);
             
             screen_x = (i / NUM_RAYS) * room_width;
 
-            draw_line_width_color(screen_x, (room_height - wall_height) * 0.5, screen_x, (room_height + wall_height) * 0.5, 2, color, color);
+            var vertical_offset = sin(player_z) * 10;
+            draw_line_width_color(screen_x, (room_height - wall_height) * 0.5 + vertical_offset, screen_x, (room_height + wall_height) * 0.5 + vertical_offset, 2, color, color);
         }
         
         surface_reset_target();
@@ -141,10 +152,33 @@ function doom_3d_effect(player_x, player_y, player_angle, map_data, wall_texture
             wall_height = (room_height / correct_distance) * (NUM_RAYS / (2 * tan(HALF_FOV)));
             wall_height = min(wall_height, room_height);
             
-            color_intensity = clamp(255 - (distance * 0.5), 0, 255);
+            color_intensity = clamp(180 - (distance * 1.2), 5, 180);
+            
+            var light_sources = global.light_sources;
+            var num_lights = array_length(light_sources);
+            for (var j = 0; j < num_lights; j++) {
+                var light = light_sources[j];
+                var light_distance = point_distance(test_x, test_y, light[0], light[1]);
+                var light_intensity = light[2] / (1 + light_distance * 0.01);
+                var falloff = 1 / (1 + light_distance * 0.005);
+                color_intensity = min(color_intensity + light_intensity * falloff, 255);
+            }
+
+            var shadow_intensity = 0;
+            for (var j = 0; j < num_lights; j++) {
+                var light = light_sources[j];
+                var to_light_angle = arctan2(light[1] - test_y, light[0] - test_x);
+                var angle_diff = abs(angle_difference(to_light_angle, ray_angle));
+                if (angle_diff < pi/4) {
+                    shadow_intensity += (pi/4 - angle_diff) / (pi/4) * 0.5;
+                }
+            }
+            color_intensity *= (1 - shadow_intensity);
+            
             color = make_color_rgb(color_intensity, color_intensity, color_intensity);
             
-            draw_line_width_color(i, (room_height - wall_height) * 0.5, i, (room_height + wall_height) * 0.5, 1, color, color);
+            var vertical_offset = sin(player_z) * 10;
+            draw_line_width_color(i, (room_height - wall_height) * 0.5 + vertical_offset, i, (room_height + wall_height) * 0.5 + vertical_offset, 1, color, color);
         }
         
         surface_reset_target();

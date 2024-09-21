@@ -1,15 +1,17 @@
 move_speed = 2;
 rotation_speed = 3;
 collision_buffer = 5; 
-globalvar map_data;
-
-map_data =
-[[1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 0, 0, 0, 0, 0, 0, 0, 1],
-[1, 0, 1, 1, 1, 0, 0, 0, 1],
-[1, 0, 1, 0, 0, 0, 1, 0, 1],
-[1, 1, 1, 0, 0, 1, 1, 0, 1],
-[1, 0, 0, 0, 0, 0, 0, 0, 1],
-[1, 1, 1, 0, 1, 1, 1, 0, 1],
-[1, 0, 0, 0, 1, 0, 0, 0, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1]]
+init_map()
+z = 0;
+z_speed = 0;
+z_acceleration = 0.005;
+z_max_speed = 0.01;
+z_amplitude = 2;
+is_moving = false;
+z_return_speed = 0.02;
+stamina = 100;
+max_stamina = 100;
+stamina_regen_rate = 0.5;
+stamina_drain_rate = 1;
+footstep_timer = 0;
+footstep_interval = 20;
